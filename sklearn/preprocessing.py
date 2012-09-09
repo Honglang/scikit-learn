@@ -175,16 +175,16 @@ class MinMaxScaler(BaseEstimator, TransformerMixin):
             raise ValueError("Minimum of desired feature range must be smaller"
                              " than maximum. Got %s." % str(feature_range))
         if sp.issparse(X):
-            self.min_ = sp.min(X, axis=1)
-            self.scale = sp.max(X, axis=1) - self.min_
+            self.min_ = sp.min(X, axis=0)
+            self.scale = sp.max(X, axis=0) - self.min_
         else:
-            self.min_ = np.min(X, axis=1)
-            self.scale_ = np.max(X, axis=1) - self.min_
+            self.min_ = np.min(X, axis=0)
+            self.scale_ = np.max(X, axis=0) - self.min_
         return self
 
     def transform(self, X):
         if self.copy:
-            X = (X - self.min_[:, np.newaxis]) / self.scale_[:, np.newaxis]
+            X = (X - self.min_) / self.scale_
         else:
             X -= self.min_
             X /= self.scale_
